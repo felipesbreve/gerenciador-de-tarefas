@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 
 const { v4: uuidv4 } = require('uuid');
-const req = require('express/lib/request');
 
 const app = express();
 
@@ -16,11 +15,11 @@ function checksExistsUserAccount(request, response, next) {
 
   const user = users.find(user => user.username === username);
 
-  if(user) {
+  if(!user) {
     return response.status(404).json({ error: "User not found!"})
   }
   request.user = user;
-  return next;
+  return next();
 }
 
 app.post('/users', (request, response) => {
@@ -40,7 +39,7 @@ app.post('/users', (request, response) => {
     }
 
   users.push(user);
-
+  
   return response.status(201).json(user);
 });
 
